@@ -39,7 +39,7 @@ public class BattleshipTwo {
             while (totalShipsSunk < ships.length) {
                 runGuess();
                 //if 'Q' was pressed
-                if (qPressed == true) {
+                if (qPressed) {
                     return;
                 }
                 //only print the new board if there is still a ship not yet sunk..
@@ -107,7 +107,7 @@ public class BattleshipTwo {
         while (shipsPlaced != ships.length) {
             for (int i = 0; i < ships.length; i++) {
                 //get the x,y coordinates, direction and the correct letter to be placing for each ship
-//                //temp non randoms for testing
+                //temp non randoms for testing
 //                int x = i + 1;
 //                int y = 0;
 //                int direction = 1;
@@ -146,7 +146,7 @@ public class BattleshipTwo {
         }
     }//end of getShipLetter
 
-    public static void shipSpot(char letter, int ship, int x, int y, int direction) {
+    public static int shipSpot(char letter, int ship, int x, int y, int direction) {
         int shipSpace = ship;
         int xAxis = x;
         int yAxis = y;
@@ -155,11 +155,13 @@ public class BattleshipTwo {
             //check if the spot is empty
             if (board[yAxis][xAxis] != '*') {
                 errorMessage();
+                return -1;
             }
             if (direction == UP) {
                 //look for bad placements
                 if ((y - ship) < 0) {
                     errorMessage();
+                    return -1;
                 }
                 //if no bad placements are found, proceed
                 else {
@@ -171,6 +173,7 @@ public class BattleshipTwo {
             else if (direction == DOWN) {
                 if ((y + ship) > 10) {
                     errorMessage();
+                    return -1;
                 } else {
                     board[yAxis][xAxis] = letter;
                     shipSpace--;
@@ -180,6 +183,7 @@ public class BattleshipTwo {
             else if (direction == RIGHT) {
                 if ((x + ship) > 10) {
                     errorMessage();
+                    return -1;
                 } else {
                     board[yAxis][xAxis] = letter;
                     shipSpace--;
@@ -189,6 +193,7 @@ public class BattleshipTwo {
             else if (direction == LEFT) {
                 if ((x - ship) < 0) {
                     errorMessage();
+                    return -1;
                 } else {
                     board[yAxis][xAxis] = letter;
                     shipSpace--;
@@ -200,6 +205,7 @@ public class BattleshipTwo {
                 shipsPlaced++;
             }
         }//end of while shipSpace > 0
+        return 1;
     }//end of shipSpot
 
     public static void errorMessage() {
@@ -221,6 +227,7 @@ public class BattleshipTwo {
         //check for game quit
         if (guess.charAt(0) == 'Q') {
             qPressed = true;
+            //gameEnd();
             return;
         }
         //check for errors
@@ -229,9 +236,12 @@ public class BattleshipTwo {
             System.out.println("Incorrect input. Please try again.");
             return;
         }
-        if (guess.length() == 3 && guess.charAt(2) != '0') {
+        if (guess.length() == 3) {
+            if (guess.charAt(2) != '0') {
+                System.out.println(guess.charAt(2));
                 System.out.println("Incorrect input. Please try again.");
                 return;
+            }
         }
 
         //get 'Y' guess
