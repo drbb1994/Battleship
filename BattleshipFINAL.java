@@ -3,7 +3,7 @@ package src.com.company;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class BattleshipTwo {
+public class Hw10_Battleship {
 
     static final int CARRIER = 5;
     static final int BATTLESHIP = 4;
@@ -34,25 +34,28 @@ public class BattleshipTwo {
     static boolean qPressed = false;
 
     public static void main(String[] args) throws InterruptedException {
-        while(replay) {
-            gameStart();
-            while (totalShipsSunk < ships.length) {
-                runGuess();
-                //if 'Q' was pressed
-                if (qPressed) {
-                    return;
+            while (replay) {
+                gameStart();
+                while (totalShipsSunk < ships.length) {
+                    runGuess();
+                    //if 'Q' was pressed
+                    if (qPressed) {
+                        continue;
+                    }
+                    //only print the new board if there is still a ship not yet sunk..
+                    if (totalShipsSunk != 5) {
+                        printBoard(newBoard);
+                    }
                 }
-                //only print the new board if there is still a ship not yet sunk..
-                if (totalShipsSunk != 5) {
-                    printBoard(newBoard);
-                }
+                gameEnd();
             }
-            gameEnd();
-        }
     }//end of main
 
     public static void gameStart() throws InterruptedException {
         //initialize the game board(which will be invisible to the player) and set the boats.
+        shipsPlaced = 0;
+        totalShipsSunk = 0;
+        qPressed = false;
         resetBoard(board);
         placeShips(ships);
 
@@ -60,6 +63,7 @@ public class BattleshipTwo {
         resetBoard(newBoard);
 
         System.out.println("    Welcome to Battleship! \nPress 'Q' at any time to quit.");
+        System.out.println("\n\n\n\n\n\n\n\n\n\n");
         TimeUnit.SECONDS.sleep(2);
         System.out.print("Filling the board");
         for (int i = 0; i < 6; i++) {
@@ -88,6 +92,8 @@ public class BattleshipTwo {
     }//end of resetBoard
 
     public static void printBoard(char[][] board) {
+        //print amount of ships sunk
+        System.out.println("Ships Sunk: " + totalShipsSunk);
         //print the header
         System.out.print("    ");
         for (int i = 0; i < header.length; i++) {
@@ -124,7 +130,7 @@ public class BattleshipTwo {
 
     public static char getShipLetter(int shipIndex) {
         //int shipIndex = i;
-        char shipLetter = ' ';
+        char shipLetter;
         switch (shipIndex) {
             case 0:
                 shipLetter = 'P';
@@ -226,13 +232,13 @@ public class BattleshipTwo {
 
         //check for game quit
         if (guess.charAt(0) == 'Q') {
+            totalShipsSunk = 101;
             qPressed = true;
-            //gameEnd();
             return;
         }
         //check for errors
         if (guess.charAt(0) < 'A' || guess.charAt(0) > 'J' || guess.length() < 2 || guess.length() > 3
-        || guess.charAt(1) < '1' || guess.charAt(1) > '9') {
+                || guess.charAt(1) < '1' || guess.charAt(1) > '9') {
             System.out.println("Incorrect input. Please try again.");
             return;
         }
@@ -253,7 +259,7 @@ public class BattleshipTwo {
         if (guess.length() == 3) {
             xGuess = 10;
         } else {
-            xGuess = (int) (guess.charAt(1) - '0');
+            xGuess = guess.charAt(1) - '0';
         }
 
         //if the spot was already guessed
@@ -319,7 +325,7 @@ public class BattleshipTwo {
     }//end of getYGuess
 
     public static boolean boatSunk(char boatLetter) throws InterruptedException {
-        boolean sunk = false;
+        boolean sunk;
 
         int boat;
         switch (boatLetter) {
@@ -386,23 +392,24 @@ public class BattleshipTwo {
             System.out.println("YOU WON! THANK YOU FOR PLAYING!");
         }
         else {
-            System.out.println("THANK YOU FOR PLAYING!\n\n");
+            System.out.println("THANK YOU FOR PLAYING!\n");
         }
         TimeUnit.SECONDS.sleep(2);
-        System.out.println(" BATTLESHIP IN JAVA © 2020 Dovid Rosenberg");
-        TimeUnit.SECONDS.sleep(2);
-        System.out.println("Would you like to play again? (type 'yes' or 'no' and press enter)");
+        System.out.println("Would you like to try another game? (type 'Yes' or 'No' and press Enter)");
         Scanner scan = new Scanner(System.in);
         String replayAnswer = scan.next();
         replayAnswer = replayAnswer.toUpperCase();
         if (replayAnswer.charAt(0) == 'Y') {
             //reset game controls
-            shipsPlaced = 0;
             totalShipsSunk = 0;
             replay = true;
             return replay;
         }
         else if(replayAnswer.charAt(0) == 'N') {
+            System.out.println("Ok! Have a great day!");
+            TimeUnit.SECONDS.sleep(2);
+            System.out.println("\n   BATTLESHIP IN JAVA © 2020 Dovid Rosenberg");
+            TimeUnit.SECONDS.sleep(2);
             replay = false;
             return replay;
         }
