@@ -3,7 +3,7 @@ package src.com.company;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class Hw10_Battleship {
+public class Battleship {
 
     static final int CARRIER = 5;
     static final int BATTLESHIP = 4;
